@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi TKA SMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-header">
+    <div class="brand">
+      <div class="brand-logo">TKA</div>
+      <div>
+        <p class="brand-title">PUSMENDIK</p>
+        <p class="brand-subtitle">APLIKASI ANBK - Simulasi TKA SMP</p>
+      </div>
+    </div>
+    <div id="headerUserBadge" class="header-user"></div>
+  </header>
+
+  <main class="app-container">
+    <section id="view-setup" class="view active">
+      <div class="card setup-card">
+        <div class="icon-circle">SMP</div>
+        <h1>Simulasi TKA SMP</h1>
+        <p class="muted center">Pilih mata pelajaran, durasi, dan jumlah soal untuk memulai simulasi.</p>
+        <div class="setup-auth-row">
+          <p id="setupAuthStatus" class="small muted">Status akun: belum login.</p>
+          <div class="setup-auth-actions">
+            <button id="openCredentialsBtn" type="button" class="btn btn-light btn-sm">Buka Akun Peserta</button>
+            <button id="logoutBtn" type="button" class="btn btn-light btn-sm hidden">Keluar Akun</button>
+            <button id="openAdminBtn" type="button" class="btn btn-light btn-sm">Panel Admin</button>
+          </div>
+        </div>
+
+        <form id="setupForm" class="form-grid">
+          <label class="field">
+            <span>Mata Pelajaran</span>
+            <select id="subjectSelect" required>
+              <option value="Matematika">Matematika</option>
+              <option value="IPA">IPA</option>
+              <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+              <option value="Bahasa Inggris">Bahasa Inggris</option>
+              <option value="IPS">IPS</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Durasi Ujian</span>
+            <select id="durationSelect" required>
+              <option value="30">30 menit</option>
+              <option value="45">45 menit</option>
+              <option value="60" selected>60 menit</option>
+              <option value="90">90 menit</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Jumlah Soal</span>
+            <select id="questionCountSelect" required>
+              <option value="10">10 soal</option>
+              <option value="15">15 soal</option>
+              <option value="20" selected>20 soal</option>
+              <option value="25">25 soal</option>
+              <option value="30">30 soal</option>
+            </select>
+          </label>
+
+          <button type="submit" class="btn btn-primary btn-block">Mulai Simulasi</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="view-admin-login" class="view">
+      <div class="card narrow">
+        <h2>Login Admin</h2>
+        <p class="muted">Hanya admin yang mengetahui password dan token ujian resmi.</p>
+        <form id="adminLoginForm" class="form-grid">
+          <label class="field">
+            <span>Password Admin</span>
+            <input id="adminPassword" type="password" placeholder="Masukkan password admin" required>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Masuk Panel Admin</button>
+        </form>
+        <button id="backFromAdminLoginBtn" class="btn btn-light btn-block">Kembali ke Halaman Awal</button>
+      </div>
+    </section>
+
+    <section id="view-admin-dashboard" class="view">
+      <div class="card">
+        <div class="admin-head">
+          <div>
+            <h2>Panel Admin Ujian Resmi</h2>
+            <p id="adminSessionText" class="small muted">Belum login admin.</p>
+          </div>
+          <button id="adminLogoutBtn" class="btn btn-light btn-sm">Logout Admin</button>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3>Pengaturan Ujian Resmi</h3>
+            <form id="adminExamForm" class="form-grid">
+              <label class="field">
+                <span>Mata Pelajaran</span>
+                <select id="adminSubjectSelect" required>
+                  <option value="Matematika">Matematika</option>
+                  <option value="IPA">IPA</option>
+                  <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                  <option value="Bahasa Inggris">Bahasa Inggris</option>
+                  <option value="IPS">IPS</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Durasi (menit)</span>
+                <input id="adminDurationInput" type="number" min="30" max="180" value="60" required>
+              </label>
+
+              <label class="field">
+                <span>Jumlah Soal</span>
+                <input id="adminQuestionCountInput" type="number" min="5" max="60" value="20" required>
+              </label>
+
+              <label class="field">
+                <span>Token Ujian Resmi</span>
+                <input id="adminExamTokenInput" type="text" placeholder="Contoh: TKA2026A" required>
+              </label>
+
+              <button id="adminGenerateQuestionsBtn" type="button" class="btn btn-light btn-block">Generate Soal AI</button>
+              <button type="submit" class="btn btn-primary btn-block">Simpan Draft Ujian</button>
+            </form>
+
+            <div class="admin-actions">
+              <button id="adminStartExamBtn" class="btn btn-primary">Mulai Ujian Serentak</button>
+              <button id="adminStopExamBtn" class="btn btn-danger">Akhiri Ujian</button>
+              <button id="adminRefreshStateBtn" class="btn btn-light">Refresh Data Ujian</button>
+            </div>
+            <p id="adminExamStateText" class="small muted">Status ujian belum tersedia.</p>
+          </div>
+
+          <div class="card">
+            <div class="admin-section-head">
+              <h3>Soal Ujian Resmi</h3>
+              <button id="adminAddQuestionBtn" type="button" class="btn btn-light btn-sm">Tambah Soal</button>
+            </div>
+            <p class="small muted">Isi soal langsung seperti Google Form: teks soal, foto opsional, dan tipe PG biasa/PG kompleks.</p>
+            <p id="adminQuestionBuilderStatus" class="small muted">Belum ada soal.</p>
+            <div id="adminQuestionBuilderList" class="admin-question-builder-list"></div>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <div class="admin-section-head">
+              <h3>Monitoring Realtime Peserta</h3>
+              <button id="adminRefreshMonitorBtn" class="btn btn-light btn-sm">Refresh</button>
+            </div>
+            <p id="adminMonitorStatus" class="small muted">Belum ada data monitor.</p>
+            <div id="adminMonitorList" class="history-list"></div>
+          </div>
+
+          <div class="card">
+            <div class="admin-section-head">
+              <h3>Seluruh Hasil dan Pelanggaran</h3>
+              <button id="adminRefreshResultsBtn" class="btn btn-light btn-sm">Refresh</button>
+            </div>
+            <p id="adminResultsStatus" class="small muted">Belum ada data hasil.</p>
+            <div id="adminResultsList" class="history-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-credentials" class="view">
+      <div class="card narrow">
+        <h2>Akun Peserta</h2>
+        <p class="muted">Setiap peserta wajib punya akun sendiri supaya hasil tersimpan dan bisa dilihat lagi.</p>
+
+        <div class="auth-forms">
+          <form id="registerForm" class="form-grid credential-box">
+            <h3>Daftar Akun Baru</h3>
+            <label class="field">
+              <span>Username</span>
+              <input id="registerUsername" type="text" placeholder="contoh: peserta001" required>
+            </label>
+            <label class="field">
+              <span>Nama Tampilan</span>
+              <input id="registerDisplayName" type="text" placeholder="Nama peserta">
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input id="registerPassword" type="password" minlength="6" placeholder="Minimal 6 karakter" required>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Buat Akun</button>
+          </form>
+
+          <form id="loginForm" class="form-grid credential-box">
+            <h3>Login Akun</h3>
+            <label class="field">
+              <span>Username</span>
+              <input id="loginUsername" type="text" placeholder="Username peserta" required>
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input id="loginPassword" type="password" placeholder="Password akun" required>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+          </form>
+        </div>
+
+        <p id="authStatusText" class="small muted">Belum login.</p>
+        <button id="toConfirmBtn" class="btn btn-primary btn-block" disabled>Lanjut ke Konfirmasi Peserta</button>
+        <button id="refreshCredentialsHistoryBtn" class="btn btn-light btn-block hidden" type="button">Refresh Riwayat</button>
+        <button id="logoutFromCredentialsBtn" class="btn btn-light btn-block hidden" type="button">Keluar dari Akun Ini</button>
+        <button id="backToSetupFromCredentialsBtn" class="btn btn-light btn-block">Kembali ke Halaman Awal</button>
+
+        <div id="credentialsHistoryPanel" class="hidden">
+          <h3>Riwayat Hasil Akun</h3>
+          <p id="credentialsHistoryStatus" class="small muted">Belum ada data.</p>
+          <div id="credentialsHistoryList" class="history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-confirm" class="view">
+      <div class="confirm-layout">
+        <div class="card token-card">
+          <p><strong>Token ujian diberikan oleh admin/pengawas.</strong></p>
+          <p class="small muted">Token bersifat rahasia dan hanya admin yang mengetahui.</p>
+          <p class="small muted">Semua peserta memakai token yang sama saat ujian resmi dimulai serentak.</p>
+          <p class="hidden">Token: <strong id="tokenDisplay">-</strong></p>
+          <button id="refreshTokenBtn" class="btn btn-primary btn-sm hidden" type="button">Refresh</button>
+        </div>
+
+        <div class="card confirm-card">
+          <h2>Konfirmasi Data Peserta</h2>
+          <form id="confirmForm" class="form-grid">
+            <label class="field">
+              <span>Kode NIK</span>
+              <input id="confirmNik" type="text" readonly>
+            </label>
+
+            <label class="field">
+              <span>Nama Peserta</span>
+              <input id="confirmDisplayName" type="text" readonly>
+            </label>
+
+            <label class="field">
+              <span>Jenis Kelamin</span>
+              <select id="confirmGender" required>
+                <option value="Laki-Laki">Laki-Laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Mata Ujian</span>
+              <input id="confirmExamSubject" type="text" readonly>
+            </label>
+
+            <label class="field">
+              <span>Nama Lengkap</span>
+              <input id="confirmFullName" type="text" placeholder="Ketik nama lengkap peserta" required>
+            </label>
+
+            <div class="field-group">
+              <span>Tanggal Lahir</span>
+              <div class="birth-grid">
+                <select id="birthDay" required>
+                  <option value="">Hari</option>
+                </select>
+                <select id="birthMonth" required>
+                  <option value="">Bulan</option>
+                </select>
+                <select id="birthYear" required>
+                  <option value="">Tahun</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Token</span>
+              <input id="confirmToken" type="text" placeholder="Ketik token di sini" required>
+            </label>
+
+            <button type="submit" class="btn btn-primary btn-block">Submit dan Mulai Ujian</button>
+          </form>
+          <button id="backToSetupFromConfirmBtn" class="btn btn-light btn-block">Batal dan Kembali ke Login</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-loading" class="view">
+      <div class="card narrow loading-card">
+        <div class="spinner"></div>
+        <p id="loadingText">Menyusun soal dengan AI...</p>
+      </div>
+    </section>
+
+    <section id="view-exam" class="view">
+      <div class="card exam-card">
+        <div class="exam-top">
+          <div>
+            <h2 id="examQuestionHeading">Soal nomor 1</h2>
+            <p id="examSubjectInfo" class="muted">Matematika</p>
+          </div>
+          <div class="exam-actions">
+            <span id="timerBadge" class="badge">Sisa Waktu: 00:00</span>
+            <span id="securityBadge" class="badge badge-muted">Peringatan 0/2 | Penalti 0</span>
+            <button id="openQuestionListBtn" class="btn btn-primary btn-sm">Daftar Soal</button>
+          </div>
+        </div>
+
+        <div id="lockBanner" class="alert hidden"></div>
+        <div id="securityEventBanner" class="alert alert-warning hidden"></div>
+
+        <article class="question-panel">
+          <p id="questionText" class="question-text"></p>
+          <p id="questionTypeHint" class="small muted question-type-hint"></p>
+          <div id="questionImageWrap" class="question-image-wrap hidden">
+            <img id="questionImage" class="question-image" alt="Gambar soal">
+          </div>
+          <div id="optionList" class="option-list"></div>
+        </article>
+
+        <div class="exam-bottom">
+          <button id="prevQuestionBtn" class="btn btn-danger btn-inline">Soal Sebelumnya</button>
+          <label class="flag-toggle">
+            <input id="markDoubtCheckbox" type="checkbox">
+            Ragu-ragu
+          </label>
+          <button id="nextQuestionBtn" class="btn btn-primary btn-inline">Soal Berikutnya</button>
+        </div>
+
+        <div class="exam-footer">
+          <button id="finishExamBtn" class="btn btn-light">Selesai Ujian</button>
+          <span id="questionProgressText" class="muted"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-result" class="view">
+      <div class="card result-card">
+        <h2>Hasil Simulasi</h2>
+        <p id="finishReason" class="muted"></p>
+
+        <div class="result-summary">
+          <div class="summary-box">
+            <span>Benar</span>
+            <strong id="correctCountText">0</strong>
+          </div>
+          <div class="summary-box">
+            <span>Salah</span>
+            <strong id="wrongCountText">0</strong>
+          </div>
+          <div class="summary-box">
+            <span>Penalti</span>
+            <strong id="penaltyText">0</strong>
+          </div>
+          <div class="summary-box highlight">
+            <span>Nilai Akhir</span>
+            <strong id="finalScoreText">0</strong>
+          </div>
+        </div>
+        <p id="resultSaveStatus" class="small muted"></p>
+
+        <h3>Kunci Jawaban dan Pembahasan Singkat</h3>
+        <div id="reviewList" class="review-list"></div>
+        <h3>Riwayat Hasil Akun</h3>
+        <p id="resultHistoryStatus" class="small muted">Belum ada data.</p>
+        <div id="resultHistoryList" class="history-list"></div>
+
+        <button id="restartBtn" class="btn btn-primary btn-block">Kembali ke Halaman Awal</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="questionListModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>Daftar Soal</h3>
+        <button id="closeQuestionListBtn" class="close-btn" aria-label="Tutup">x</button>
+      </div>
+      <div id="questionGrid" class="question-grid"></div>
+      <p class="small muted">Biru: soal aktif | Hijau: terjawab | Kuning: ragu-ragu.</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
